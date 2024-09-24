@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub File Info</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #file-info { border: 1px solid #ccc; padding: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>GitHub File Information</h1>
+    <button id="fetch-file">Fetch File Content</button>
+    <div id="file-info"></div>
+
+    <script>
+        document.getElementById('fetch-file').onclick = function() {
+            const username = 'Manidatta1'; // Replace with your GitHub username
+            const repoName = 'R-Programming';      // Replace with your repository name
+            const filePath = 'Manidatta.txt'; // Replace with the path to your file
+            const url = `https://api.github.com/repos/${username}/${repoName}/contents/${filePath}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('File not found or repository not accessible');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const fileContent = atob(data.content); // Decode the base64 content
+                    document.getElementById('file-info').innerHTML = `
+                        <h2>${data.name}</h2>
+                        <pre>${fileContent}</pre>
+                    `;
+                })
+                .catch(error => {
+                    document.getElementById('file-info').innerHTML = `<p>${error.message}</p>`;
+                });
+        };
+    </script>
+</body>
+</html>
